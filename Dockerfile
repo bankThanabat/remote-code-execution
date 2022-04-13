@@ -6,3 +6,6 @@ COPY . .
 
 RUN npm install --only=production
 
+USER node
+
+CMD ["npm", "start"]
