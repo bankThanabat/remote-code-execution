@@ -1,12 +1,13 @@
-FROM node:16-alpine
+FROM node:12-alpine
 
-COPY . /app
+RUN apk add --no-cache python3
 
 WORKDIR /app
 
-RUN npm install
+COPY . .
 
-USER node
+RUN npm i --production
 
-CMD ["npm", "start"]
+CMD [ "node", "server.js" ]
 
+EXPOSE 8000
