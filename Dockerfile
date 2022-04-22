@@ -6,8 +6,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm i --production
+RUN npm i
 
-CMD [ "node", "server.js" ]
+CMD [ "npm", "start" ]
 
 EXPOSE 8000
