@@ -1,6 +1,8 @@
-FROM node:12-alpine
+FROM docker:18.09.6
 
-RUN apk add --no-cache python3
+
+RUN apk add --no-cache iptables bash
+RUN apk add --update nodejs npm
 
 WORKDIR /app
 
@@ -8,6 +10,6 @@ COPY . .
 
 RUN npm i
 
-CMD [ "npm", "start" ]
-
 EXPOSE 8000
+
+ENTRYPOINT [ "./start.sh" ]

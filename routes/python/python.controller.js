@@ -16,10 +16,11 @@ async function httpPostPython(req, res) {
     var uniqueStr = uuidv1();
 
     var linux_path_file = `${configPath}/${uniqueStr}.py`;
-    var windown_path_file = path.join(configPath, uniqueStr + ".py");
+    // var windown_path_file = path.join(configPath, uniqueStr + ".py");
+    var file_path = path.join(configPath, uniqueStr + ".py");
 
     try {
-      fs.writeFileSync((file = windown_path_file), (data = code), {
+      fs.writeFileSync((file = file_path), (data = code), {
         encoding: "utf8",
       });
 
