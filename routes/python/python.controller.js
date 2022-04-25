@@ -15,16 +15,14 @@ async function httpPostPython(req, res) {
   if (validate(code)) {
     var uniqueStr = uuidv1();
 
-    var linux_path_file = `${configPath}/${uniqueStr}.py`;
-    // var windown_path_file = path.join(configPath, uniqueStr + ".py");
-    var file_path = path.join(configPath, uniqueStr + ".py");
+    var file_path = `${configPath}/${uniqueStr}.py`;
 
     try {
       fs.writeFileSync((file = file_path), (data = code), {
         encoding: "utf8",
       });
 
-      await spawn_child_process(linux_path_file, res);
+      await spawn_child_process(file_path, res);
     } catch (err) {
       if (mode === "develop") throw new Error("Error creating file: " + err);
       return res.status(400).json({
