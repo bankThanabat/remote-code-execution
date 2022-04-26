@@ -11,7 +11,11 @@ docker pull python:3.9 &&
 
 echo " "
 
-npm start
+docker pull node:18-alpine3.14 &&
+
+echo " "
+
+node server.js
 
 echo " "
 
