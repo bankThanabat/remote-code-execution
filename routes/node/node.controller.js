@@ -1,5 +1,4 @@
 const fs = require("fs");
-const path = require("path");
 const { v1: uuidv1 } = require("uuid");
 const { spawn_child_process } = require("../containerProvider");
 
@@ -9,13 +8,12 @@ const mode = process.env.MODE;
 const configPath = process.env.TEMP_PATH;
 const timeOut = parseInt(process.env.TIMEOUT);
 
-async function httpPostPython(req, res) {
+async function httpPostNode(req, res) {
   var code = req.body.code;
-
   if (validate(code)) {
     var uniqueStr = uuidv1();
 
-    var file_path = `${configPath}/${uniqueStr}.py`;
+    var file_path = `${configPath}/${uniqueStr}.js`;
 
     try {
       fs.writeFileSync((file = file_path), (data = code), {
@@ -30,7 +28,7 @@ async function httpPostPython(req, res) {
       });
     }
 
-    await spawn_child_process(file_path, res, { language: "python" });
+    await spawn_child_process(file_path, res, { language: "node" });
   } else {
     return res.status(400).json({
       stdout: "",
@@ -40,19 +38,9 @@ async function httpPostPython(req, res) {
 }
 
 function validate(str) {
-  reg1 = RegExp(/\bimport\W+(?:\w+\W+){0,}(?:os|subprocess|importlib)\b/g);
-  words = ["open(", "os"];
-
-  if (str.match(reg1)) {
-    return false;
-  } else if (
-    words.every((el) => str.toLowerCase().includes(el.toLowerCase()))
-  ) {
-    return false;
-  }
   return true;
 }
 
 module.exports = {
-  httpPostPython,
+  httpPostNode,
 };
