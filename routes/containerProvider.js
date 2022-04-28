@@ -1,32 +1,36 @@
 const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
-const { inherits } = require("util");
 
 async function spawn_child_process(file_path, res, options = { language: "" }) {
   let stdout = "";
   let stderr = "";
 
-  const _path = "/usr/src/app/" + file_path;
+  let _path = "";
+  if (options.language === "php") {
+    _path = "/var/www/html/" + file_path;
+  } else {
+    _path = "/usr/src/app/" + file_path;
+  }
 
   var language_unique_command;
   if (options.language === "node") {
     language_unique_command = ["node:18-alpine3.14", "node"];
   } else if (options.language === "python") {
     language_unique_command = ["python:3.9", "python"];
-  }
-
-  if (!language_unique_command) {
+  } else if (options.language === "php") {
+    language_unique_command = ["php:7.4-fpm-alpine", "php"];
+  } else {
     return res.status(400).json({ stdout: "", stderr: "invaild language" });
   }
-
+  console.log({ path: path.dirname(path.dirname(_path)) });
   const child = spawn(
     "docker",
     [
       "run",
       "--rm",
       "-v",
-      process.cwd() + ":" + "/usr/src/app",
+      process.cwd() + ":" + path.dirname(path.dirname(_path)),
       ...language_unique_command,
       _path,
     ],
@@ -35,10 +39,6 @@ async function spawn_child_process(file_path, res, options = { language: "" }) {
 
   child.on("spawn", (data) => {
     console.log("spawn successfully");
-  });
-
-  child.on("message", (message) => {
-    console.log({ message });
   });
 
   child.on("error", function (err) {
